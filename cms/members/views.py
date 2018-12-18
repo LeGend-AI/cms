@@ -5,6 +5,7 @@ from django.views import generic
 
 from .models import Member
 
-class MemberListView(generic.ListViewj):
+class MemberListView(generic.ListView):
   template_name = 'polls/index.html'
+  context_object_name = 'member_list'
   model = Member

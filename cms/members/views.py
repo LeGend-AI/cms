@@ -1,19 +1,20 @@
 from django.contrib.auth.models import User
 from django.views import generic
 from django.views.generic.edit import CreateView
+from django.urls import reverse_lazy
 
 from .models import MemberProfile
 from .forms import CreateUserForm
 
 class MemberListView(generic.ListView):
-  template_name = 'polls/index.html'
-  context_object_name = 'member_list'
+  template_name = 'members/member_list.html'
   model = MemberProfile
+  context_object_name = 'members'
 
-class SignUpView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
-    login_url = reverse_lazy('members:login')
+class SignUpView(CreateView):
     form_class = CreateUserForm
-    template_name = "member_sign_up_form.html"
+    template_name = "members/member_sign_up_form.html"
+    success_url = reverse_lazy('members:list')
 
     def form_valid(self, form):
         c = {'form': form, }
@@ -24,12 +25,11 @@ class SignUpView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         password = form.cleaned_data['password']
         repeat_password = form.cleaned_data['repeat_password']
         if password != repeat_password:
-            messages.error(self.request, "Passwords do not Match", extra_tags='alert alert-danger')
             return render(self.request, self.template_name, c)
         user.set_password(password)
         user.save()
 
         # Create UserProfile model
-        UserProfile.objects.create(user=user, phone_number=phone_number, date_of_birth=date_of_birth)
+        MemberProfile.objects.create(user=user, organization=organization, title=title)
 
-        return super(CreateUserView, self).form_valid(form)
+        return super(SignUpView, self).form_valid(form)

@@ -8,8 +8,10 @@ from .forms import CreateUserForm
 
 class MemberListView(generic.ListView):
   template_name = 'members/member_list.html'
-  model = MemberProfile
   context_object_name = 'members'
+
+  def get_queryset(self):
+      return MemberProfile.objects.filter(user__is_active=True)
 
 class SignUpView(CreateView):
     form_class = CreateUserForm
@@ -27,6 +29,7 @@ class SignUpView(CreateView):
         if password != repeat_password:
             return render(self.request, self.template_name, c)
         user.set_password(password)
+        user.is_active = False
         user.save()
 
         # Create UserProfile model

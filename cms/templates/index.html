@@ -3,7 +3,7 @@
 {% block title %}首页{% endblock %}
 
 {% block banner %}
-<div class="jumbotron" style="margin-bottom: 0px;">
+<div class="jumbotron mb-0">
   <img class="w-100" src="">
   <p class="text-center">首页图片展位</p>
 </div>
@@ -11,36 +11,34 @@
 
 
 {% block main %} 
-<div class="container">
-  <div class="row">
-    <div class="container col-sm-9">
-    </div>
-
-    <div class="container col-sm-3">
-      <div class="card">
-        {% if user.is_authenticated %}
-        <div class="card-header">您好</div>
-        <div class="card-body">
-          <h2>{{user.get_full_name }}</h2>
-          <p>{{user.memberprofile.organization}} - {{user.memberprofile.title}}</p>
-          <a class="badge badge-secondary" href="{% url 'logout' %}"><small>注销登录</small></a>
-        </div>
-        {% else %}
-        <div class="card-header text-center"> 账号登录 </div>
-        <div class="card-body">
-          {% include 'registration/login_form.html' %}
-        </div>
-        {% endif %}
-      </div>
-    </div>
+<div class="clearfix">
+  <div class="float-left">
   </div>
 
-  <div class="row">
-    <div class="container col-sm-8">
+  <div class="float-right">
+    <div class="card">
+      {% if user.is_authenticated %}
+      <div class="card-header">您好,{{ user.get_username }}</div>
+      <div class="card-body">
+        <h2>{{user.get_full_name }}</h2>
+        <p>{{user.memberprofile.organization}} - {{user.memberprofile.title}}</p>
+        <a class="badge badge-secondary" href="{% url 'logout' %}"><small>注销登录</small></a>
+      </div>
+      {% else %}
+      <div class="card-header text-center"> 账号登录 </div>
+      <div class="card-body">
+        {% include 'registration/login_form.html' %}
+      </div>
+      {% endif %}
     </div>
+  </div>
+</div>
 
-    <div class="container col-sm-4">
-    </div>
+<div class="clearfix">
+  <div class="float-left">
+  </div>
+
+  <div class="float-right">
   </div>
 </div>
 {% endblock %}
